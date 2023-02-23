@@ -39,6 +39,9 @@ client.on("interactionCreate", async (interaction: Interaction) => {
   if (interaction.commandName === "ping") {
     await interaction.reply("Pong!");
   }
+  if (interaction.commandName === "auth") {
+    await interaction.reply("Not implemented!");
+  }
 });
 
 client.login(env.DISCORD_TOKEN);
