@@ -1,8 +1,7 @@
+import { env } from "./env";
 import { Interaction } from "discord.js";
-
-require("dotenv").config();
-const { REST, Routes } = require("discord.js");
-const { Client, GatewayIntentBits } = require("discord.js");
+import { REST, Routes } from "discord.js";
+import { Client, GatewayIntentBits } from "discord.js";
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const commands = [
@@ -16,24 +15,22 @@ const commands = [
   },
 ];
 
-const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
+const rest = new REST({ version: "10" }).setToken(env.DISCORD_TOKEN);
 
-(async () => {
-  try {
-    console.log("Started refreshing application (/) commands.");
+try {
+  console.log("Started refreshing application (/) commands.");
 
-    await rest.put(Routes.applicationCommands(process.env.APPLICATION_ID), {
-      body: commands,
-    });
+  await rest.put(Routes.applicationCommands(env.APPLICATION_ID), {
+    body: commands,
+  });
 
-    console.log("Successfully reloaded application (/) commands.");
-  } catch (error) {
-    console.error(error);
-  }
-})();
+  console.log("Successfully reloaded application (/) commands.");
+} catch (error) {
+  console.error(error);
+}
 
 client.on("ready", () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  console.log(`Logged in as ${client.user?.tag}!`);
 });
 
 client.on("interactionCreate", async (interaction: Interaction) => {
@@ -44,4 +41,4 @@ client.on("interactionCreate", async (interaction: Interaction) => {
   }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(env.DISCORD_TOKEN);
