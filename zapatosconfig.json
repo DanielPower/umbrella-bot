@@ -1,0 +1,9 @@
+{
+  "db": {
+    "user": "{{PGUSER}}",
+    "host": "{{PGHOST}}",
+    "password": "{{PGPASSWORD}}",
+    "database": "{{PGDATABASE}}",
+    "port": "{{PGPORT}}"
+  }
+}
