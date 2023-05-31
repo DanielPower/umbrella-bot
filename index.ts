@@ -2,18 +2,8 @@ import { env } from "./env";
 import { Interaction } from "discord.js";
 import { REST, Routes } from "discord.js";
 import { Client, GatewayIntentBits } from "discord.js";
+import { commands } from "./handlers";
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
-const commands = [
-  {
-    name: "ping",
-    description: "Replies with Pong!",
-  },
-  {
-    name: "auth",
-    description: "Link with your osu! account",
-  },
-];
 
 const rest = new REST({ version: "10" }).setToken(env.DISCORD_TOKEN);
 
@@ -21,7 +11,7 @@ try {
   console.log("Started refreshing application (/) commands.");
 
   await rest.put(Routes.applicationCommands(env.APPLICATION_ID), {
-    body: commands,
+    body: commands.map(({ name, description }) => ({ name, description })),
   });
 
   console.log("Successfully reloaded application (/) commands.");
@@ -35,13 +25,12 @@ client.on("ready", () => {
 
 client.on("interactionCreate", async (interaction: Interaction) => {
   if (!interaction.isChatInputCommand()) return;
-
-  if (interaction.commandName === "ping") {
-    await interaction.reply("Pong!");
-  }
-  if (interaction.commandName === "auth") {
-    await interaction.reply("Not implemented!");
+  const command = commands.find(
+    (command) => command.name === interaction.commandName,
+  );
+  if (command) {
+    await command.handler(interaction);
   }
 });
 
-client.login(env.DISCORD_TOKEN);
+await client.login(env.DISCORD_TOKEN);

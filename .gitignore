@@ -1,2 +1,4 @@
 /env.ts
 /node_modules
+/.idea
+/.vscode
